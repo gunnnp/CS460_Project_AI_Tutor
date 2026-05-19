@@ -1,41 +1,34 @@
 """
-OpenRouter client — wrap OpenAI SDK ให้ชี้ไปที่ OpenRouter
-OpenRouter เป็น OpenAI-compatible อยู่แล้ว แค่เปลี่ยน base_url + key
+OpenAI client — ใช้ OpenAI API โดยตรง
 """
 import os
 from openai import OpenAI
 
-# ค่า default ของ model — เปลี่ยนผ่าน env ได้
-DEFAULT_MODEL = os.getenv(
-    "DEFAULT_MODEL", "meta-llama/llama-3.3-70b-instruct:free"
-)
+DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "gpt-4o-mini")
 
-# Models ที่ใช้บ่อยใน project — alias ไว้สำหรับเรียกง่าย
 MODELS = {
-    "llama": "meta-llama/llama-3.3-70b-instruct:free",
-    "qwen": "qwen/qwen-2.5-72b-instruct:free",
-    "deepseek": "deepseek/deepseek-r1:free",
+    "mini": "gpt-4o-mini",
+    "standard": "gpt-4o",
 }
 
 
 def get_client() -> OpenAI:
-    """สร้าง OpenAI client ที่ชี้ไปที่ OpenRouter"""
-    api_key = os.getenv("OPENROUTER_API_KEY")
+    """สร้าง OpenAI client"""
+    api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError(
-            "OPENROUTER_API_KEY ยังไม่ตั้งค่า — ดูที่ backend/.env.example"
+            "OPENAI_API_KEY ยังไม่ตั้งค่า — ดูที่ backend/.env"
         )
-    base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    return OpenAI(api_key=api_key, base_url=base_url)
+    return OpenAI(api_key=api_key)
 
 
 def chat(
     messages: list[dict],
     model: str | None = None,
-    temperature: float = 0.7,
+    temperature: float = 0.5,
 ) -> str:
     """
-    เรียก chat completion แบบง่าย
+    เรียก chat completion
     ใช้: chat([{"role": "user", "content": "hello"}])
     """
     client = get_client()
