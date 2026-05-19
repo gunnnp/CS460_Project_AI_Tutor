@@ -7,18 +7,55 @@ export const subjects = {
       id: 'cs101',
       name: 'Introduction to Computer Science',
       description: 'พื้นฐาน programming, data structure เบื้องต้น',
+      topics: [
+        { id: 'variables', name: 'Variables & Types' },
+        { id: 'control-flow', name: 'Control Flow' },
+        { id: 'functions', name: 'Functions' },
+        { id: 'data-structures', name: 'Data Structures' },
+        { id: 'recursion', name: 'Recursion' },
+      ],
     },
     {
       id: 'cs460',
       name: 'Artificial Intelligence',
       description: 'Search, Logic, ML, Neural Networks',
+      topics: [
+        { id: 'search', name: 'Search Algorithms' },
+        { id: 'logic', name: 'Logic & Reasoning' },
+        { id: 'planning', name: 'Planning' },
+        { id: 'ml', name: 'Machine Learning' },
+        { id: 'neural-networks', name: 'Neural Networks' },
+      ],
     },
     {
       id: 'cs350',
       name: 'Database Systems',
       description: 'SQL, ER diagram, normalization, transaction',
+      topics: [
+        { id: 'sql', name: 'SQL Basics' },
+        { id: 'er-diagram', name: 'ER Diagram' },
+        { id: 'normalization', name: 'Normalization' },
+        { id: 'transactions', name: 'Transactions & Locking' },
+      ],
     },
   ],
+}
+
+// Mock upload — จำลอง latency แล้วคืน file_id แบบ random
+// (FE ใช้ตรงนี้แทน multipart POST จริงเวลา VITE_USE_MOCK=true)
+export function mockUpload(files) {
+  return new Promise((resolve) => {
+    const latency = 600 + Math.random() * 600
+    setTimeout(() => {
+      const uploaded = files.map((f) => ({
+        file_id: `f_${Math.random().toString(36).slice(2, 10)}`,
+        filename: f.name,
+        size: f.size,
+        status: 'ready',
+      }))
+      resolve({ uploaded })
+    }, latency)
+  })
 }
 
 export const assessmentSession = {
