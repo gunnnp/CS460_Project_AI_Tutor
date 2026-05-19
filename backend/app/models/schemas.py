@@ -18,20 +18,47 @@ class ErrorResponse(BaseModel):
 
 
 # ===== Subjects =====
+class Topic(BaseModel):
+    id: str
+    name: str
+
+
 class Subject(BaseModel):
     id: str
     name: str
     description: str
+    topics: list[Topic] = []
 
 
 class SubjectsResponse(BaseModel):
     subjects: list[Subject]
 
 
+# ===== Upload =====
+class UploadedFile(BaseModel):
+    file_id: str
+    filename: str
+    size: int
+    status: Literal["ready", "processing", "failed"]
+
+
+class UploadResponse(BaseModel):
+    uploaded: list[UploadedFile]
+
+
 # ===== Assess =====
+class CustomSubject(BaseModel):
+    name: str = Field(..., max_length=60)
+    description: Optional[str] = Field(None, max_length=200)
+
+
 class AssessRequest(BaseModel):
-    subject_id: str = Field(..., description="id ของวิชา")
+    subject_id: str = Field(..., description="id ของวิชา หรือ 'custom'")
     question: str = Field(..., min_length=1, description="คำถามที่นักศึกษาอยากเรียน")
+    topic_id: Optional[str] = None
+    custom_topic: Optional[str] = None
+    custom_subject: Optional[CustomSubject] = None
+    file_ids: Optional[list[str]] = None
 
 
 QuizType = Literal["multiple_choice"]
@@ -103,6 +130,7 @@ class ExerciseResponse(BaseModel):
     exercise_id: str
     question: str
     type: ExerciseType
+    choices: Optional[list[str]] = None
     hint: Optional[str] = None
 
 
