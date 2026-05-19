@@ -38,7 +38,7 @@ from app.services.prompts import (
     build_exercise_submit_messages,
 )
 
-load_dotenv()
+load_dotenv(override=True)
 
 app = FastAPI(
     title="AI Tutor API",
